@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auditoria · Resort</title>
+<style>
+:root{
+  --bg:#0f1117;--bg2:#181b23;--bg3:#1f2333;--bg4:#252a3a;
+  --border:#2a2f45;--text:#d0d6e8;--text2:#8b92ab;--text3:#555e7a;
+  --red:#e24b4a;--red-bg:rgba(226,75,74,.12);--red-b:rgba(226,75,74,.35);
+  --amber:#ef9f27;--amber-bg:rgba(239,159,39,.1);--amber-b:rgba(239,159,39,.35);
+  --green:#73bf69;--green-bg:rgba(115,191,105,.1);--green-b:rgba(115,191,105,.3);
+  --blue:#5794f2;--blue-bg:rgba(87,148,242,.1);--purple:#b877d9;--cyan:#37a2cf;
+  --font:'Inter','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;line-height:1.5;}
+
+/* ===== LOGIN ===== */
+#login{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;}
+.login-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:40px 48px;width:360px;text-align:center;}
+.login-logo{font-size:28px;margin-bottom:8px;}
+.login-title{font-size:16px;font-weight:600;color:#fff;margin-bottom:4px;}
+.login-sub{font-size:12px;color:var(--text3);margin-bottom:28px;}
+.login-box input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:10px 14px;font-size:14px;outline:none;margin-bottom:12px;}
+.login-box input:focus{border-color:var(--blue);}
+.login-btn{width:100%;background:var(--blue);border:none;border-radius:5px;color:#fff;padding:11px;font-size:14px;font-weight:500;cursor:pointer;}
+.login-btn:hover{background:#4080e0;}
+.login-err{color:var(--red);font-size:12px;margin-top:8px;min-height:18px;}
+
+/* ===== MAIN ===== */
+#main{display:none;}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:11px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+.topbar-title{font-size:14px;font-weight:600;color:#fff;}
+.topbar-sub{font-size:11px;color:var(--text3);margin-top:1px;}
+.tbadges{display:flex;gap:6px;flex-wrap:wrap;}
+.tb{font-size:10px;font-weight:500;padding:3px 9px;border-radius:3px;}
+.tb-r{background:var(--red-bg);color:var(--red);border:1px solid var(--red-b);}
+.tb-a{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-b);}
+.tb-g{background:var(--green-bg);color:var(--green);border:1px solid var(--green-b);}
+
+.dash{padding:14px 18px 32px;max-width:1500px;margin:0 auto;}
+.stitle{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);padding:14px 0 8px;border-bottom:1px solid var(--border);margin-bottom:10px;}
+.row{display:grid;gap:10px;margin-bottom:10px;}
+.r5{grid-template-columns:repeat(5,1fr);}
+.r4{grid-template-columns:repeat(4,1fr);}
+.r3{grid-template-columns:repeat(3,1fr);}
+.r2{grid-template-columns:1fr 1fr;}
+.r21{grid-template-columns:2fr 1fr;}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:5px;overflow:hidden;}
+.ph{padding:9px 13px 6px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;}
+.pt{font-size:11px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;}
+.pb{padding:11px 13px;}
+.kv{font-size:24px;font-weight:300;letter-spacing:-.5px;color:#fff;margin:3px 0 2px;}
+.ks{font-size:11px;color:var(--text3);}
+.k-r .kv{color:var(--red);}
+.k-a .kv{color:var(--amber);}
+.k-g .kv{color:var(--green);}
+.k-b .kv{color:var(--blue);}
+.k-p .kv{color:var(--purple);}
+
+.al{padding:7px 11px;border-radius:3px;margin-bottom:7px;font-size:12px;line-height:1.6;display:flex;gap:8px;}
+.al:last-child{margin-bottom:0;}
+.al-r{background:var(--red-bg);border-left:3px solid var(--red);}
+.al-a{background:var(--amber-bg);border-left:3px solid var(--amber);}
+.al-g{background:var(--green-bg);border-left:3px solid var(--green);}
+.al-b{background:var(--blue-bg);border-left:3px solid var(--blue);}
+.al strong{color:#fff;font-weight:500;}
+.ai{font-size:14px;flex-shrink:0;margin-top:1px;}
+
+.gt{width:100%;border-collapse:collapse;font-size:12px;}
+.gt th{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);padding:5px 8px;border-bottom:1px solid var(--border);text-align:left;}
+.gt td{padding:5px 8px;border-bottom:1px solid rgba(42,47,69,.5);color:var(--text2);vertical-align:top;}
+.gt tr:last-child td{border-bottom:none;}
+.num{text-align:right;font-variant-numeric:tabular-nums;}
+.bld td{font-weight:500;color:var(--text)!important;background:rgba(42,47,69,.4);}
+.r{color:var(--red)!important;}.a{color:var(--amber)!important;}.g{color:var(--green)!important;}.b{color:var(--blue)!important;}
+
+.tag{display:inline-block;font-size:10px;padding:1px 7px;border-radius:3px;white-space:nowrap;}
+.t-r{background:var(--red-bg);color:var(--red);border:1px solid var(--red-b);}
+.t-a{background:var(--amber-bg);color:var(--amber);}
+.t-g{background:var(--green-bg);color:var(--green);}
+.t-b{background:var(--blue-bg);color:var(--blue);}
+
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:7px;margin:7px 0;}
+.mc{background:var(--bg3);border-radius:3px;padding:8px 10px;text-align:center;}
+.mc-v{font-size:17px;font-weight:300;margin:2px 0;}
+.mc-l{font-size:10px;color:var(--text3);}
+.sep{height:1px;background:var(--border);margin:8px 0;}
+
+.novo{display:inline-block;font-size:9px;background:#b877d9;color:#fff;border-radius:3px;padding:1px 5px;margin-left:5px;vertical-align:middle;}
+
+@media(max-width:900px){
+  .r5,.r4{grid-template-columns:repeat(2,1fr);}
+  .r3,.r2,.r21{grid-template-columns:1fr;}
+  .tbadges{display:none;}
+  .dash{padding:10px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <div class="login-logo">🔒</div>
+    <div class="login-title">Auditoria de Gestão · Resort</div>
+    <div class="login-sub">Análise confidencial — acesso restrito</div>
+    <input type="password" id="pwd" placeholder="Senha de acesso" onkeydown="if(event.key==='Enter')tryLogin()">
+    <button class="login-btn" onclick="tryLogin()">Entrar</button>
+    <div class="login-err" id="err"></div>
+  </div>
+</div>
+
+<!-- MAIN DASHBOARD -->
+<div id="main">
+<div class="topbar">
+  <div>
+    <div class="topbar-title">🔍 Auditoria de Gestão · Associação dos Moradores do Resort</div>
+    <div class="topbar-sub">Dez/2024 → Fev/2026 · 13 meses · 18 prestações de contas analisadas · Piraquara–PR</div>
+  </div>
+  <div class="tbadges">
+    <span class="tb tb-r">🔴 11 alertas críticos</span>
+    <span class="tb tb-a">🟡 10 pontos de atenção</span>
+    <span class="tb tb-g">💡 7 oportunidades</span>
+  </div>
+</div>
+
+<div class="dash">
+
+<!-- KPIs -->
+<div class="stitle">Indicadores do período (Dez/24 → Fev/26)</div>
+<div class="row r5">
+  <div class="panel"><div class="ph"><span class="pt">Dívida ativa (fev/26)</span></div><div class="pb k-r"><div class="kv">R$ 130,9k</div><div class="ks">Pico R$162,7k · nunca abaixo de R$114k</div></div></div>
+  <div class="panel"><div class="ph"><span class="pt">Vivo móvel — desperdício</span></div><div class="pb k-r"><div class="kv">~R$5,9k/ano</div><div class="ks">7 linhas c/ dados em local com Wi-Fi</div></div></div>
+  <div class="panel"><div class="ph"><span class="pt">Energia — potencial solar</span></div><div class="pb k-g"><div class="kv">R$81,5k/ano</div><div class="ks">Payback estimado 3,4 anos</div></div></div>
+  <div class="panel"><div class="ph"><span class="pt">Perdas judiciais</span></div><div class="pb k-r"><div class="kv">R$23,7k</div><div class="ks">Acordos judiciais perdidos · 13 meses</div></div></div>
+  <div class="panel"><div class="ph"><span class="pt">Oportunidades mapeadas</span></div><div class="pb k-g"><div class="kv">R$130k+</div><div class="ks">Economia anual identificada</div></div></div>
+</div>
+
+<!-- ACHADOS NOVOS -->
+<div class="stitle">🆕 Novos achados desta análise <span class="novo">NOVO</span></div>
+<div class="row r3">
+  <div class="panel">
+    <div class="ph"><span class="pt">Coroa de Flores</span><span class="tag t-a">Questão</span></div>
+    <div class="pb">
+      <div class="al al-a"><span class="ai">💐</span><div><strong>R$550 (abr/25) + R$550 (out/25) = R$1.100 em coroas de flores.</strong> Gasto social legítimo, mas precisa ter critério formal: quem tem direito? Associado? Cônjuge? Funcionário? Sem deliberação, pode gerar precedentes.</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Utensílios Domésticos Salões</span><span class="tag t-a">Questão</span></div>
+    <div class="pb">
+      <div class="al al-a"><span class="ai">🍽️</span><div><strong>R$323 (ago/25) + R$344 (out/25) + R$570 acessórios (set/25) = R$1.237.</strong> Compras de utensílios para os salões de festas. Sem inventário publicado não é possível confirmar se o material está sendo reposto devido a quebras ou se há controle patrimonial. Quem controla o que entra e sai dos salões?</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Coleta de Lixo — irregular</span><span class="tag t-a">Atenção</span></div>
+    <div class="pb">
+      <div class="al al-a"><span class="ai">🗑️</span><div><strong>Coleta de Lixo aparece apenas 3 vezes em 13 meses:</strong> dez/24 R$410, fev/25 R$500, out/25 R$560. Não é mensal. Serviço de coleta especial (entulho? resíduos industriais?) ou pagamento atrasado? Se for serviço regular, por que não aparece todo mês?</div></div>
+    </div>
+  </div>
+</div>
+<div class="row r3">
+  <div class="panel">
+    <div class="ph"><span class="pt">Perdas Judiciais — R$23.752</span><span class="tag t-r">Crítico</span></div>
+    <div class="pb">
+      <div class="al al-r"><span class="ai">⚖️</span><div><strong>"Despesas com Perdas por Acordos Judiciais"</strong> aparecem em todos os 13 meses (R$429 a R$9.577/mês). Em mai/25: <strong>R$9.577 num único mês</strong> — identificados como "Ação FGTS" (R$1.389 + R$7.569). A Associação perdeu uma ação de FGTS de funcionário. Há outras ações trabalhistas em aberto? O advogado apresenta relatório de risco ao Conselho?</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Acessibilidade Digital — R$299</span><span class="tag t-a">Questão</span></div>
+    <div class="pb">
+      <div class="al al-a"><span class="ai">💻</span><div><strong>R$299 em ago/25 — "Acessibilidade Digital".</strong> Aparece uma única vez. O que é? Um plugin de acessibilidade para o site? Consultoria? Software? Sem descrição nos demonstrativos. Gasto pontual mas sem contexto.</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Contribuição Sindical — R$1.200</span><span class="tag t-a">Atenção</span></div>
+    <div class="pb">
+      <div class="al al-a"><span class="ai">🏛️</span><div><strong>R$1.200 em ago/25.</strong> Desde a reforma trabalhista (2017), a contribuição sindical é facultativa para empregadores. A Associação está pagando compulsoriamente ou é contribuição voluntária? Se voluntária, foi deliberada pelo Conselho?</div></div>
+    </div>
+  </div>
+</div>
+<div class="row r2">
+  <div class="panel">
+    <div class="ph"><span class="pt">Honorários Contabilidade — R$50k em 13 meses</span><span class="tag t-a">Atenção</span></div>
+    <div class="pb">
+      <div class="al al-a"><span class="ai">📊</span><div><strong>Syndikos Gestão Condominial cobra R$3.590–4.760/mês</strong> de honorários de contabilidade, totalizando <strong>R$49.998 em 13 meses</strong>. Há um contrato de escopo definido? Quais serviços estão incluídos? Comparar com cotação de mercado para portfólio do mesmo porte seria prudente — especialmente considerando que a Syndikos também recebe pelo sistema de informática (R$589–1.745/mês) e pelo correio, acumulando múltiplas fontes de receita do mesmo cliente.</div></div>
+      <div class="al al-b"><span class="ai">💡</span><div>Em 13 meses: Honorários R$49.998 + Sistema de Informática R$9.360 + Correio R$943 = <strong>R$60.301</strong> pagos à Syndikos. Vale comparar escopo e preço com ao menos 2 concorrentes de mesmo porte.</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Ressarcimento de Danos a Associados</span><span class="tag t-r">Crítico</span></div>
+    <div class="pb">
+      <div class="al al-r"><span class="ai">💥</span><div><strong>Mar/25: R$1.858 + Dez/25: R$380 = R$2.238 pagos como ressarcimento de danos.</strong> A Associação danificou bens de associados? Quem foi ressarcido? Por qual motivo? Esses pagamentos indicam responsabilidade civil da Associação por danos causados em propriedades ou veículos. Sem nota explicativa. O Conselho aprovou? O advogado avaliou o risco de novas ações?</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- LENHA / COMBUSTÍVEL -->
+<div class="stitle">🔴 Lenha e combustíveis — falta de rastreabilidade</div>
+<div class="row r2">
+  <div class="panel">
+    <div class="ph"><span class="pt">Lenha — confirmado que é responsabilidade do locatário</span><span class="tag t-g">Resolvido</span></div>
+    <div class="pb">
+      <div class="al al-g"><span class="ai">🪵</span><div><strong>Confirmado:</strong> o termo de reserva do Salão Fogo de Chão (fev/24) explicita literalmente: "O espaço fogo de chão <em>SEM LENHA</em>". O locatário é responsável por trazer sua própria lenha. A Associação não deveria comprar lenha para os salões.</div></div>
+      <div class="al al-r"><span class="ai">⚠️</span><div><strong>Porém:</strong> a conta "Combustíveis e Lubrificantes" (R$23.846 em 13 meses) nunca discrimina se inclui lenha, gasolina, óleo ou outros. Sem NF discriminada por tipo e finalidade, não é possível descartar que lenha esteja sendo comprada pela Associação para uso interno ou para cobrir locatários. Exigir NFs detalhadas mensalmente é medida imediata.</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Combustíveis — R$23.846 sem rastreabilidade</span><span class="tag t-r">Crítico</span></div>
+    <div class="pb">
+      <table class="gt">
+        <thead><tr><th>Mês</th><th class="num">Valor</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Dez24</td><td class="num r">2.080</td><td>Pico</td></tr>
+          <tr><td>Jan25</td><td class="num">1.168</td><td>+ Óleo trator R$81 (dinheiro)</td></tr>
+          <tr><td>Mar25</td><td class="num">2.103</td><td>+ Bateria trator R$520 (dinheiro)</td></tr>
+          <tr><td>Abr25</td><td class="num r">2.416</td><td>Pico — mesmo mês voçoroca</td></tr>
+          <tr><td>Ago25</td><td class="num">1.640</td><td>—</td></tr>
+          <tr><td>Set25</td><td class="num">1.928</td><td>—</td></tr>
+          <tr><td>Dez25</td><td class="num r">2.189</td><td>Pico</td></tr>
+          <tr><td>Fev26</td><td class="num">2.019</td><td>—</td></tr>
+        </tbody>
+      </table>
+      <div class="al al-r" style="margin-top:8px"><span class="ai">🔴</span><div>Nenhum NF com fornecedor nominal de combustível nos demonstrativos. Pagamentos em dinheiro em vários meses. Quem abastece? O trator? Roçadeiras? Veículo privado do zelador? Valor médio de R$1.834/mês sem controle nenhum.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- INADIMPLÊNCIA -->
+<div class="stitle">🔴 Inadimplência — dívida estrutural</div>
+<div class="row r21">
+  <div class="panel">
+    <div class="ph"><span class="pt">Dívida total em aberto — 13 meses</span></div>
+    <div class="pb">
+      <svg viewBox="0 0 700 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:110px">
+        <defs><linearGradient id="gc" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e24b4a" stop-opacity=".3"/><stop offset="100%" stop-color="#e24b4a" stop-opacity=".02"/></linearGradient></defs>
+        <line x1="0" y1="15" x2="700" y2="15" stroke="#2a2f45" stroke-width=".8"/>
+        <line x1="0" y1="45" x2="700" y2="45" stroke="#2a2f45" stroke-width=".8"/>
+        <line x1="0" y1="75" x2="700" y2="75" stroke="#2a2f45" stroke-width=".8"/>
+        <text x="2" y="13" font-size="8" fill="#555e7a" font-family="Inter,sans-serif">170k</text>
+        <text x="2" y="43" font-size="8" fill="#555e7a" font-family="Inter,sans-serif">140k</text>
+        <text x="2" y="73" font-size="8" fill="#555e7a" font-family="Inter,sans-serif">110k</text>
+        <polygon fill="url(#gc)" points="40,47 93,24 146,73 199,56 252,19 305,68 358,66 411,45 464,61 517,48 570,20 620,49 668,53 668,85 40,85"/>
+        <polyline fill="none" stroke="#e24b4a" stroke-width="2" points="40,47 93,24 146,73 199,56 252,19 305,68 358,66 411,45 464,61 517,48 570,20 620,49 668,53"/>
+        <circle cx="252" cy="19" r="4" fill="#ef9f27"/><text x="244" y="14" font-size="8" fill="#ef9f27" font-family="Inter,sans-serif">R$163k</text>
+        <circle cx="570" cy="20" r="4" fill="#ef9f27"/><text x="562" y="15" font-size="8" fill="#ef9f27" font-family="Inter,sans-serif">R$162k</text>
+        <circle cx="146" cy="73" r="3" fill="#73bf69"/>
+        <text x="40" y="98" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Dez24</text><text x="88" y="98" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Jan25</text><text x="141" y="98" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Fev</text><text x="194" y="98" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Mar</text><text x="247" y="98" font-size="7.5" fill="#ef9f27" font-family="Inter,sans-serif">Abr</text><text x="300" y="98" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Mai</text><text x="353" y="98" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Ago</text><text x="406" y="98" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Set</text><text x="459" y="98" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Out</text><text x="512" y="98" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Nov</text><text x="565" y="98" font-size="7.5" fill="#ef9f27" font-family="Inter,sans-serif">Dez</text><text x="615" y="98" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Jan26</text><text x="660" y="98" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Fev26</text>
+      </svg>
+      <div class="al al-r"><span class="ai">⚠</span><div>Dívida nunca abaixo de R$114k. <strong>Lotes crônicos (9 fixos):</strong> 037, 094, 158, 170, 171, 175, 176, 189, 202. O extrato individual por lote nunca foi publicado. Roçadas desses lotes (R$10.190 em 13 meses) custeadas pela coletividade.</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Parcelamentos — extrema volatilidade</span></div>
+    <div class="pb">
+      <table class="gt">
+        <thead><tr><th>Mês</th><th class="num">Acordo/Parc.</th></tr></thead>
+        <tbody>
+          <tr><td>Dez24</td><td class="num a">R$ 28.347</td></tr>
+          <tr><td>Jan25</td><td class="num g">R$ 4.007</td></tr>
+          <tr><td class="r">Fev25</td><td class="num r">R$ 49.828</td></tr>
+          <tr><td>Abr25</td><td class="num r">R$ 46.095</td></tr>
+          <tr><td>Mai25</td><td class="num g">R$ 6.573</td></tr>
+          <tr><td>Dez25</td><td class="num r">R$ 43.488</td></tr>
+          <tr><td>Fev26</td><td class="num a">R$ 19.767</td></tr>
+        </tbody>
+      </table>
+      <div class="al al-r" style="margin-top:7px"><span class="ai">⚡</span><div>Variação de R$4k a R$49,8k indica negociações individuais sem tabela aprovada. Estatuto Art. 24 item 3 exige norma do Conselho.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TELEFONIA -->
+<div class="stitle">🔴 Telefonia — 3 contratos, 1 ofensor</div>
+<div class="row r2">
+  <div class="panel">
+    <div class="ph"><span class="pt">Vivo Móvel — 7 linhas com dados desnecessários</span><span class="tag t-r">Ofensor</span></div>
+    <div class="pb">
+      <div class="mg" style="grid-template-columns:repeat(6,1fr)">
+        <div class="mc"><div class="mc-v" style="color:var(--green);font-size:13px">R$245</div><div class="mc-l">Mar/23</div></div>
+        <div class="mc"><div class="mc-v" style="color:var(--amber);font-size:13px">R$430</div><div class="mc-l">Jan/24</div></div>
+        <div class="mc"><div class="mc-v" style="color:var(--amber);font-size:13px">R$553</div><div class="mc-l">Dez/24</div></div>
+        <div class="mc"><div class="mc-v" style="color:var(--red);font-size:13px">R$625</div><div class="mc-l">Mar/25</div></div>
+        <div class="mc"><div class="mc-v" style="color:var(--red);font-size:13px">R$703</div><div class="mc-l">Ago/25</div></div>
+        <div class="mc"><div class="mc-v" style="color:var(--red);font-size:13px">R$600</div><div class="mc-l">Fev/26</div></div>
+      </div>
+      <div class="al al-r"><span class="ai">📱</span><div><strong>~7 linhas SMART EMPRESAS com 2–12GB de dados</strong> (confirmado na fatura jan/24). Wi-Fi já está instalado nos salões, portaria e escritório. Funcionários precisam apenas de chip de voz (~R$30/linha). 7×R$30 = R$210/mês vs R$600–703 atual = <strong>economia de R$390–493/mês → R$5.916/ano.</strong></div></div>
+      <div class="al al-a"><span class="ai">⚡</span><div><strong>LFG OLIVEIRA</strong> pago em dinheiro (~R$107/mês): "Assessoria em Telecomunicação". Qual serviço? Se for internet, a Nova Era cobre por R$120 via boleto. Pagamento em espécie sem rastreabilidade.</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Syndikos — múltiplas fontes de receita do mesmo cliente</span><span class="tag t-a">Atenção</span></div>
+    <div class="pb">
+      <div class="al al-a"><span class="ai">📊</span><div><strong>Syndikos recebe por 3 itens diferentes:</strong></div></div>
+      <table class="gt" style="margin-top:4px">
+        <thead><tr><th>Item</th><th class="num">13 meses</th></tr></thead>
+        <tbody>
+          <tr><td>Honorários Contabilidade</td><td class="num a">R$ 49.998</td></tr>
+          <tr><td>Sistema de Informática</td><td class="num a">R$ 9.360</td></tr>
+          <tr><td>Correio</td><td class="num">R$ 943</td></tr>
+          <tr class="bld"><td>Total Syndikos</td><td class="num r">R$ 60.301</td></tr>
+        </tbody>
+      </table>
+      <div class="al al-b" style="margin-top:8px"><span class="ai">💡</span><div>R$60k ao mesmo fornecedor em 13 meses, sem cotação concorrente documentada. O escopo do contrato cobre todos esses itens ou são cobranças adicionais? Vale comparar com 2 administradoras concorrentes.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- VIGILÂNCIA -->
+<div class="stitle">🔴 Segurança — aumento estrutural sem justificativa</div>
+<div class="row r2">
+  <div class="panel">
+    <div class="ph"><span class="pt">Vieseg — composição mensal por NF</span></div>
+    <div class="pb">
+      <table class="gt">
+        <thead><tr><th>Mês</th><th class="num">Zelador</th><th class="num">Guarita</th><th class="num">Cobertura férias</th><th class="num">Total</th></tr></thead>
+        <tbody>
+          <tr><td>Dez24–Mar25</td><td class="num">—</td><td class="num">10.680</td><td class="num g">—</td><td class="num">10.680</td></tr>
+          <tr><td class="r">Abr25 ↑+65%</td><td class="num a">5.131</td><td class="num">6.578</td><td class="num a">5.920</td><td class="num r">17.629</td></tr>
+          <tr><td class="r">Jul25 ↑+25%</td><td class="num a">5.131</td><td class="num">5.920</td><td class="num r">10.578</td><td class="num r">21.629</td></tr>
+          <tr><td>Nov25</td><td class="num a">5.131</td><td class="num">6.578</td><td class="num a">5.182</td><td class="num">16.891</td></tr>
+          <tr><td>Dez25–Jan26</td><td class="num a">5.131</td><td class="num">6.578</td><td class="num g">4.000</td><td class="num g">15.709</td></tr>
+          <tr><td class="r">Fev26 ↑+43%</td><td class="num a">5.131</td><td class="num">5.920</td><td class="num r">11.358</td><td class="num r">22.409</td></tr>
+        </tbody>
+      </table>
+      <div class="al al-r" style="margin-top:8px"><span class="ai">🔴</span><div><strong>Zelador adicionado ao contrato em abr/25:</strong> +R$5.131/mês fixo e permanente = +R$61.572/ano. Nenhuma nota nas prestações. As variações mensais são coberturas de férias dos colaboradores (legítimas), mas o salto estrutural de abr/25 exige justificativa.</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Fundo de Segurança vs. Despesa Real</span></div>
+    <div class="pb">
+      <div class="mg">
+        <div class="mc"><div class="mc-v" style="color:var(--red)">R$22,4k</div><div class="mc-l">Despesa fev/26</div></div>
+        <div class="mc"><div class="mc-v" style="color:var(--amber)">~R$10k</div><div class="mc-l">Fundo arrecadado</div></div>
+        <div class="mc"><div class="mc-v" style="color:var(--red)">-R$12,4k</div><div class="mc-l">Déficit mensal</div></div>
+      </div>
+      <div class="al al-a"><span class="ai">⚡</span><div>O fundo cobre apenas ~45% da despesa real. O déficit de ~R$12k/mês é rateado no condomínio geral sem transparência específica nos demonstrativos.</div></div>
+      <div class="al al-b"><span class="ai">📋</span><div>Apresentar ao Conselho: contrato Vieseg, data da última cotação, empresa, escopo e justificativa do aditivo de abr/25. Art. 24 do Estatuto exige aprovação do Conselho para gastos acima de R$20k/mês.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRESTADORES SEM FORMALIZAÇÃO -->
+<div class="stitle">🔴 Prestadores sem formalização adequada</div>
+<div class="row r3">
+  <div class="panel">
+    <div class="ph"><span class="pt">Naldemir Pinheiro — R$29.890</span><span class="tag t-r">Risco trabalhista</span></div>
+    <div class="pb">
+      <div class="al al-r"><span class="ai">🧹</span><div><strong>Pagamentos quinzenais há 13+ meses.</strong> Limpeza pós-evento + outros serviços regulares. Pagamentos "Pós Festa" em dinheiro físico. Habitualidade + pessoalidade + subordinação = potencial vínculo empregatístico. Se reclamar na Justiça do Trabalho, a Associação perde.</div></div>
+      <div class="al al-a"><span class="ai">💡</span><div>A limpeza pós-festa deveria ser cobrada do locatário — não custeada pela coletividade. Incluir na taxa de locação ou cobrar separado = economia de ~R$3k/ano.</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Eduardo Gonçalves — R$6.324 sem categoria</span><span class="tag t-r">Crítico</span></div>
+    <div class="pb">
+      <div class="al al-r"><span class="ai">❓</span><div><strong>Out/25 a Jan/26: R$6.324 em 4 meses.</strong> Única descrição com contexto: "buscar peças trator" (R$100 em dinheiro). O restante: "Eduardo Gonçalves" + valor. Sem NF, sem CNPJ, sem categoria, com parcelamentos (parc. 1/2 em nov/25). Novo prestador regular não cadastrado.</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Manutenção Esportiva — R$9.429 sem fornecedor</span><span class="tag t-r">Crítico</span></div>
+    <div class="pb">
+      <div class="al al-r"><span class="ai">🎾</span><div><strong>R$4.729 (jan/26) + R$4.700 (fev/26) = R$9.429.</strong> Valores mensais regulares — novo prestador recorrente. <strong>Nenhum CNPJ, nenhum nome, nenhuma NF identificada</strong> nos demonstrativos. O que é "manutenção esportiva"? Quadras? Academia? Canchas? Quem presta?</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TRATOR + PISCINAS + ANIMAIS -->
+<div class="stitle">🟡 Equipamentos, operações e gastos sem critério</div>
+<div class="row r3">
+  <div class="panel">
+    <div class="ph"><span class="pt">Trator — R$9.635 em 3 meses</span><span class="tag t-a">Atenção</span></div>
+    <div class="pb">
+      <div class="al al-a"><span class="ai">🚜</span><div><strong>Jan/25: R$4.150 + Fev/25: R$4.300 de manutenção + R$665 elétrica + R$520 bateria nova (mar/25).</strong> Equipamento que consome R$9.635 em 3 meses de manutenção está obsoleto. Laudo técnico + cotação de novo equipamento é necessário antes de mais investimentos de reparo.</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Piscinas — R$39.933 em 13 meses</span><span class="tag t-a">Atenção</span></div>
+    <div class="pb">
+      <div class="al al-a"><span class="ai">🏊</span><div><strong>Variou de R$1.830 a R$7.709/mês</strong> sem justificativa nos demonstrativos. Fev/25 com R$7.709 indica manutenção corretiva de grande porte. Contrato preventivo fixo (~R$2.000–2.500/mês) reduziria de 20–30% o custo médio atual de R$3.072/mês.</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Animais + Veterinário — R$1.243</span><span class="tag t-a">Questão</span></div>
+    <div class="pb">
+      <div class="al al-a"><span class="ai">🐱</span><div><strong>Carla Veronesi &amp; Cia Ltda:</strong> 3 pagamentos para castração e serviços veterinários de gatos de rua (jan/25, abr/25, dez/25). Ação social louvável, mas precisa de deliberação em assembleia: quantos animais? Qual critério? Sem política formal é um gasto aberto e crescente.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ENERGIA SOLAR -->
+<div class="stitle">🟢 Oportunidade — energia solar fotovoltaica</div>
+<div class="row r2">
+  <div class="panel">
+    <div class="ph"><span class="pt">Energia elétrica — 13 meses</span></div>
+    <div class="pb">
+      <svg viewBox="0 0 700 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:90px">
+        <defs><linearGradient id="ge" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ef9f27" stop-opacity=".4"/><stop offset="100%" stop-color="#ef9f27" stop-opacity=".02"/></linearGradient></defs>
+        <line x1="0" y1="15" x2="700" y2="15" stroke="#2a2f45" stroke-width=".8"/>
+        <line x1="0" y1="45" x2="700" y2="45" stroke="#2a2f45" stroke-width=".8"/>
+        <line x1="0" y1="75" x2="700" y2="75" stroke="#2a2f45" stroke-width=".8"/>
+        <text x="2" y="13" font-size="8" fill="#555e7a" font-family="Inter,sans-serif">11k</text>
+        <text x="2" y="43" font-size="8" fill="#555e7a" font-family="Inter,sans-serif">9k</text>
+        <text x="2" y="73" font-size="8" fill="#555e7a" font-family="Inter,sans-serif">7k</text>
+        <!-- scale 6000-12000=6000 h=70 y=80-(v-6000)/6000*70 -->
+        <!-- Dez24:9960→y=80-46.6=33.4 Jan25:8717→y=24.8 Fev25:8988→y=27 Mar25:7803→y=13.9 Abr25:8616→y=24.1 Mai25:8451→y=22.2 Ago25:9144→y=29.9 Set25:10030→y=40.4 Out25:9845→y=38.3 Nov25:9333→y=32.3 Dez25:9319→y=32.1 Jan26:9020→y=28.6 Fev26:8676→y=24.6 -->
+        <polygon fill="url(#ge)" points="40,33 93,25 146,27 199,14 252,24 305,22 358,30 411,40 464,38 517,32 570,32 620,29 668,25 668,80 40,80"/>
+        <polyline fill="none" stroke="#ef9f27" stroke-width="2" points="40,33 93,25 146,27 199,14 252,24 305,22 358,30 411,40 464,38 517,32 570,32 620,29 668,25"/>
+        <!-- Solar savings line (25% of actual) -->
+        <polyline fill="none" stroke="#73bf69" stroke-width="1.5" stroke-dasharray="5,3" points="40,72 93,70 146,71 199,68 252,70 305,69 358,72 411,75 464,74 517,72 570,72 620,71 668,70"/>
+        <text x="570" y="66" font-size="8" fill="#73bf69" font-family="Inter,sans-serif">Com solar</text>
+        <circle cx="411" cy="40" r="3" fill="#ef9f27"/><text x="403" y="36" font-size="8" fill="#ef9f27" font-family="Inter,sans-serif">R$10k</text>
+        <text x="40" y="88" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Dez24</text><text x="190" y="88" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Mar25</text><text x="355" y="88" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Ago</text><text x="406" y="88" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Set</text><text x="515" y="88" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Nov</text><text x="615" y="88" font-size="7.5" fill="#555e7a" font-family="Inter,sans-serif">Jan26</text>
+      </svg>
+      <div class="al al-g"><span class="ai">☀️</span><div><strong>R$117.903 em 13 meses</strong> (~R$9.070/mês). Sistema ~80kWp (~R$250–280k) com payback de 3,4 anos e economia de R$81,5k/ano a partir do 4° ano. Contratável pelo Conselho (Art. 218 do Estatuto) sem necessidade de assembleia.</div></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">Análise de água — periodicidade insuficiente</span></div>
+    <div class="pb">
+      <div class="al al-a"><span class="ai">💧</span><div><strong>Puri Master — R$1.120 em set/25.</strong> Aparece uma única vez em 13 meses. Para um poço artesiano utilizado por toda a comunidade, uma análise/ano é insuficiente. A legislação sanitária do Paraná exige análises periódicas de qualidade da água. O condomínio está em conformidade?</div></div>
+      <div class="al al-r"><span class="ai">⚠️</span><div>Concomitantemente, foram necessários 2 caminhões pipa (nov/25 e jan/26: R$3.600) e o poço teve manutenção de R$14.840 em 13 meses. O sistema hídrico merece diagnóstico completo: capacidade, qualidade, redundância.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGAMENTOS EM DINHEIRO -->
+<div class="stitle">🔴 Pagamentos em dinheiro — sem rastreabilidade</div>
+<div class="panel">
+  <div class="pb">
+    <div class="al al-r"><span class="ai">💵</span><div><strong>Política de zero dinheiro físico é medida de governança básica.</strong> Pagamentos em espécie não têm rastreabilidade bancária. Em caso de questionamento, são indefensáveis. Mapeados nos 13 meses:</div></div>
+    <table class="gt" style="margin-top:8px">
+      <thead><tr><th>Beneficiário</th><th>Descrição</th><th class="num">Estimativa</th><th>Nota</th></tr></thead>
+      <tbody>
+        <tr><td class="r">Naldemir Pinheiro</td><td>Limpeza pós-festa</td><td class="num r">~R$ 3.500</td><td>Dinheiro frequente</td></tr>
+        <tr><td class="a">Jacomar / Sandrioli</td><td>Festas Halloween / eventos</td><td class="num a">~R$ 1.200</td><td>Supermercados dinheiro</td></tr>
+        <tr><td class="a">Thamires Barão</td><td>Banners gráficos</td><td class="num a">~R$ 300</td><td>Fornecedor novo</td></tr>
+        <tr><td class="a">Carla Veronesi</td><td>Veterinária gatos (1 pagamento)</td><td class="num a">460</td><td>Dinheiro</td></tr>
+        <tr><td class="a">PINHAIS Acessórios</td><td>Óleo trator</td><td class="num a">81</td><td>Sem NF</td></tr>
+        <tr><td class="a">Eduardo Gonçalves</td><td>"Buscar peças" trator</td><td class="num a">100</td><td>Dinheiro</td></tr>
+        <tr><td class="a">Condor Supercenter</td><td>Doação Páscoa</td><td class="num a">59</td><td>Dinheiro</td></tr>
+        <tr><td class="a">LFG Oliveira</td><td>Assessoria telecom (1 mês)</td><td class="num a">107</td><td>Dinheiro</td></tr>
+        <tr class="bld"><td colspan="2">Total estimado em dinheiro</td><td class="num r">~R$ 5.807</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PLANO DE AÇÃO -->
+<div class="stitle">✅ Plano de ação — prioridade e impacto</div>
+<div class="panel">
+  <div class="pb">
+    <table class="gt">
+      <thead><tr><th>#</th><th>Ação</th><th>Prioridade</th><th class="num">Impacto/ano</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Cancelar dados Vivo → chip voz básica (7 linhas)</td><td><span class="tag t-r">Imediato</span></td><td class="num g">+R$ 5.916</td></tr>
+        <tr><td>2</td><td>Política zero dinheiro físico — tudo Pix/TED com NF</td><td><span class="tag t-r">Urgente</span></td><td class="num g">Rastreabilidade</td></tr>
+        <tr><td>3</td><td>Publicar extrato de dívida por lote em assembleia</td><td><span class="tag t-r">Urgente</span></td><td class="num">Transparência</td></tr>
+        <tr><td>4</td><td>Identificar e contratar formalmente "Manutenção Esportiva"</td><td><span class="tag t-r">Urgente</span></td><td class="num">R$9,4k/2 meses</td></tr>
+        <tr><td>5</td><td>Formalizar Eduardo Gonçalves — NF e categoria</td><td><span class="tag t-r">Urgente</span></td><td class="num">R$6,3k</td></tr>
+        <tr><td>6</td><td>Regularizar Naldemir (CLT ou MEI com NF) ou substituir</td><td><span class="tag t-r">Urgente</span></td><td class="num r">Risco trabalhista</td></tr>
+        <tr><td>7</td><td>Apresentar contrato Vieseg + justificativa aditivo abr/25</td><td><span class="tag t-r">Urgente</span></td><td class="num r">+R$83k/ano estrutural</td></tr>
+        <tr><td>8</td><td>Lançar roçadas como débito no saldo dos inadimplentes</td><td><span class="tag t-r">Urgente</span></td><td class="num g">+R$10,2k recuperados</td></tr>
+        <tr><td>9</td><td>Discriminar combustíveis por tipo/finalidade com NFs</td><td><span class="tag t-r">Urgente</span></td><td class="num">R$23,8k/ano</td></tr>
+        <tr><td>10</td><td>Formalizar tabela de salões em ata do Conselho (Art.24)</td><td><span class="tag t-r">Urgente</span></td><td class="num">Jurídico</td></tr>
+        <tr><td>11</td><td>Investigar perdas judiciais R$23.752 — quais processos?</td><td><span class="tag t-r">Urgente</span></td><td class="num r">Risco futuro</td></tr>
+        <tr><td>12</td><td>Limpeza pós-festa no custo do locatário (não da Assoc.)</td><td><span class="tag t-a">Médio</span></td><td class="num g">+R$3k/ano</td></tr>
+        <tr><td>13</td><td>Obter 3 orçamentos para painel solar</td><td><span class="tag t-a">Médio</span></td><td class="num g">+R$81,5k/ano (ano 4+)</td></tr>
+        <tr><td>14</td><td>Analisar custo×benefício do trator — manter ou renovar</td><td><span class="tag t-a">Médio</span></td><td class="num">R$9,6k em 3 meses</td></tr>
+        <tr><td>15</td><td>Contrato preventivo para piscinas (redução 20–30%)</td><td><span class="tag t-a">Médio</span></td><td class="num g">-R$8k/ano</td></tr>
+        <tr><td>16</td><td>Cotação Syndikos com 2 administradoras concorrentes</td><td><span class="tag t-a">Médio</span></td><td class="num">R$60k/ano</td></tr>
+        <tr><td>17</td><td>Solicitar estimativa do processo de legalização (R$209k fundo)</td><td><span class="tag t-a">Médio</span></td><td class="num">Decisão fundo</td></tr>
+        <tr><td>18</td><td>Definir política para animais comunitários em assembleia</td><td><span class="tag t-a">Médio</span></td><td class="num">R$1,2k</td></tr>
+        <tr><td>19</td><td>Verificar contribuição sindical — é obrigatória ou voluntária?</td><td><span class="tag t-a">Médio</span></td><td class="num">R$1,2k/ano</td></tr>
+        <tr><td>20</td><td>Aumentar periodicidade análise de água do poço</td><td><span class="tag t-a">Médio</span></td><td class="num">Saúde pública</td></tr>
+        <tr><td>21</td><td>Registro mensal de locações (data, lote, nº) nas prestações</td><td><span class="tag t-g">Melhoria</span></td><td class="num">Visibilidade</td></tr>
+        <tr><td>22</td><td>Aquisição de projetor próprio</td><td><span class="tag t-g">Melhoria</span></td><td class="num g">+R$1,2k/ano</td></tr>
+        <tr class="bld"><td colspan="3">Economia potencial total mapeada</td><td class="num r">R$130k+/ano</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0 8px;font-size:11px;color:var(--text3)">
+  Análise realizada sobre 18 prestações de contas (dez/2024 a fev/2026) · Uso interno e confidencial
+</div>
+
+</div><!-- /dash -->
+</div><!-- /main -->
+
+<script>
+// SHA-256 via SubtleCrypto API
+async function sha256(msg){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function tryLogin(){
+  const pwd = document.getElementById('pwd').value;
+  const err = document.getElementById('err');
+  if(!pwd){ err.textContent='Digite a senha.'; return; }
+  const h = await sha256(pwd);
+  // Expected hash for "Resort@2025#Audit"
+  if(h === 'eb091fca376f33bc1260ba48b25f935f667a4beda5e1453c4a219d0692d0ec0f'){
+    document.getElementById('login').style.display='none';
+    document.getElementById('main').style.display='block';
+    sessionStorage.setItem('auth','ok');
+  } else {
+    err.textContent='Senha incorreta.';
+    document.getElementById('pwd').value='';
+  }
+}
+
+// Check session
+if(sessionStorage.getItem('auth')==='ok'){
+  document.getElementById('login').style.display='none';
+  document.getElementById('main').style.display='block';
+}
+</script>
+</body>
+</html>
