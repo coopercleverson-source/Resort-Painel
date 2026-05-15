@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestão Estratégica · Resort</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0e14;--bg2:#13151f;--bg3:#1a1d2a;--bg4:#21253a;--border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.12);--text:#e2e6f0;--text2:#8892aa;--text3:#4a5268;--red:#ff4d6d;--amber:#ffb347;--green:#4ade80;--blue:#60a5fa;--purple:#c084fc;--cyan:#22d3ee;--font:'DM Sans',system-ui,sans-serif;--mono:'DM Mono',monospace;--r:10px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13.5px;line-height:1.6;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.5;}
+/* LOGIN */
+#login{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:var(--bg);}
+.lw{width:400px;animation:fup .5s ease both;}
+@keyframes fup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.l-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--border2);border-radius:20px;padding:4px 12px;margin-bottom:20px;}
+.l-badge span{width:6px;height:6px;border-radius:50%;background:var(--amber);box-shadow:0 0 8px var(--amber);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.l-h{font-size:26px;font-weight:300;color:#fff;line-height:1.2;margin-bottom:6px;}
+.l-h strong{font-weight:600;}
+.l-sub{font-size:13px;color:var(--text3);margin-bottom:32px;}
+.l-field{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);overflow:hidden;margin-bottom:10px;transition:border-color .2s;}
+.l-field:focus-within{border-color:var(--blue);}
+.l-field input{width:100%;background:none;border:none;outline:none;color:var(--text);padding:14px 16px;font-size:14px;font-family:var(--font);}
+.l-btn{width:100%;background:var(--blue);border:none;border-radius:var(--r);color:#0a0c14;padding:14px;font-size:14px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all .2s;}
+.l-btn:hover{background:#93c5fd;transform:translateY(-1px);box-shadow:0 8px 20px rgba(96,165,250,.25);}
+.l-err{font-size:12px;color:var(--red);margin-top:10px;min-height:16px;text-align:center;}
+/* TOPBAR */
+#main{display:none;position:relative;z-index:1;}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(12,14,20,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.tl{display:flex;align-items:center;gap:12px;}
+.t-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#1e3a5f,#2d5a8e);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.t-name{font-size:13px;font-weight:600;color:#fff;}
+.t-per{font-size:11px;color:var(--text3);}
+.tnav{display:flex;gap:2px;}
+.nb{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;color:var(--text2);border:none;background:none;cursor:pointer;font-family:var(--font);transition:all .15s;}
+.nb:hover{background:var(--bg3);color:var(--text);}
+.nb.active{background:var(--bg3);color:#fff;}
+.sc{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(255,77,109,.1);color:var(--red);border:1px solid rgba(255,77,109,.2);}
+/* PAGES */
+.page{display:none;padding:24px;max-width:1400px;margin:0 auto;}
+.page.active{display:block;animation:fin .25s ease;}
+/* HERO */
+.hero{background:linear-gradient(135deg,#0f1629 0%,#1a0f2e 50%,#0f1a2e 100%);border:1px solid var(--border2);border-radius:16px;padding:32px 36px;margin-bottom:16px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;right:-60px;top:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(96,165,250,.06) 0%,transparent 70%);pointer-events:none;}
+.h-tag{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:10px;}
+.h-title{font-size:28px;font-weight:300;color:#fff;line-height:1.2;margin-bottom:6px;}
+.h-title strong{font-weight:600;}
+.h-sub{font-size:13px;color:var(--text2);max-width:500px;margin-bottom:24px;}
+.hkg{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+.hk{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:all .2s;cursor:default;}
+.hk:hover{background:rgba(255,255,255,.07);border-color:var(--border2);transform:translateY(-2px);}
+.hk-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.hk-val{font-size:22px;font-weight:300;color:#fff;line-height:1;margin-bottom:4px;}
+.hk-sub{font-size:11px;color:var(--text3);}
+.hk.red .hk-val{color:var(--red);}
+.hk.amber .hk-val{color:var(--amber);}
+.hk.green .hk-val{color:var(--green);}
+.hk.blue .hk-val{color:var(--blue);}
+/* SECTION */
+.sh{display:flex;align-items:center;justify-content:space-between;margin:24px 0 12px;}
+.st{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:8px;}
+.st::before{content:'';width:3px;height:14px;background:var(--blue);border-radius:2px;}
+/* OFFENSE CARDS */
+.og{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.oc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.oc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
+.oc.crit::before{background:var(--red);}
+.oc.warn::before{background:var(--amber);}
+.oc.opp::before{background:var(--green);}
+.oc:hover{background:var(--bg3);border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.oc.exp{background:var(--bg3);border-color:var(--border2);}
+.oc-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px;}
+.oc-ico{font-size:20px;flex-shrink:0;}
+.ob{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:4px;}
+.bc{background:rgba(255,77,109,.15);color:var(--red);}
+.bw{background:rgba(255,179,71,.15);color:var(--amber);}
+.bo{background:rgba(74,222,128,.12);color:var(--green);}
+.oc-ttl{font-size:13.5px;font-weight:600;color:#fff;margin-bottom:4px;line-height:1.3;}
+.oc-val{font-size:22px;font-weight:300;line-height:1;margin-bottom:4px;}
+.crit .oc-val{color:var(--red);}
+.warn .oc-val{color:var(--amber);}
+.opp .oc-val{color:var(--green);}
+.oc-dsc{font-size:12px;color:var(--text2);line-height:1.5;}
+.oc-exp{overflow:hidden;max-height:0;transition:max-height .35s ease;}
+.oc.exp .oc-exp{max-height:600px;}
+.od{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:var(--text2);line-height:1.65;}
+.fact{display:flex;gap:8px;margin-bottom:6px;}
+.fd{width:5px;height:5px;border-radius:50%;background:var(--text3);flex-shrink:0;margin-top:7px;}
+.oa{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:8px;}
+.ar{background:rgba(255,77,109,.1);color:var(--red);}
+.aa{background:rgba(255,179,71,.1);color:var(--amber);}
+.ag{background:rgba(74,222,128,.08);color:var(--green);}
+.eh{font-size:10px;color:var(--text3);text-align:right;margin-top:10px;}
+/* CHARTS */
+.cr{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.cp{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;}
+.ct{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:16px;text-transform:uppercase;letter-spacing:.06em;}
+.br{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+.bl{font-size:11px;color:var(--text2);width:130px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bt{flex:1;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+.bf{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.bv{font-size:11px;color:var(--text2);width:70px;text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);}
+/* ACTION PLAN */
+.atb{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.fbs{display:flex;gap:4px;}
+.fb{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:none;color:var(--text2);font-family:var(--font);transition:all .15s;}
+.fb:hover{border-color:var(--border2);color:var(--text);}
+.fb.active{background:var(--bg3);border-color:var(--border2);color:#fff;}
+.aab{padding:7px 16px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--blue);background:rgba(96,165,250,.1);color:var(--blue);font-family:var(--font);transition:all .15s;display:flex;align-items:center;gap:6px;}
+.aab:hover{background:rgba(96,165,250,.18);}
+.at{width:100%;border-collapse:collapse;}
+.at th{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);padding:8px 12px;border-bottom:1px solid var(--border);text-align:left;background:var(--bg);position:sticky;top:55px;z-index:10;}
+.ar2{border-bottom:1px solid var(--border);transition:background .15s;}
+.ar2:hover{background:var(--bg2);}
+.ar2.done td{opacity:.4;}
+.ar2.done .at-t{text-decoration:line-through;}
+.ar2 td{padding:10px 12px;vertical-align:middle;}
+.at-num{font-size:11px;color:var(--text3);font-family:var(--mono);text-align:center;}
+.at-tc{min-width:200px;}
+.at-t{font-size:13px;font-weight:500;color:var(--text);}
+.at-t[contenteditable]:focus{outline:1px solid var(--blue);border-radius:4px;padding:2px 6px;}
+.at-n{font-size:11px;color:var(--text3);margin-top:2px;}
+.at-n[contenteditable]:focus{outline:1px solid rgba(96,165,250,.3);border-radius:3px;padding:1px 4px;}
+.at-n[contenteditable]:empty::before{content:'Adicionar nota...';color:var(--text3);}
+.pri{font-size:10px;font-weight:600;padding:2px 10px;border-radius:4px;white-space:nowrap;cursor:pointer;user-select:none;}
+.pi{background:rgba(255,77,109,.12);color:var(--red);}
+.pm{background:rgba(255,179,71,.1);color:var(--amber);}
+.pl{background:rgba(74,222,128,.08);color:var(--green);}
+.sp{font-size:10px;font-weight:500;padding:3px 10px;border-radius:12px;border:1px solid var(--border);cursor:pointer;white-space:nowrap;user-select:none;transition:all .15s;}
+.sa{color:var(--text3);}
+.san{background:rgba(96,165,250,.1);color:var(--blue);border-color:rgba(96,165,250,.2);}
+.sc2{background:rgba(74,222,128,.1);color:var(--green);border-color:rgba(74,222,128,.2);}
+.iv{font-size:12px;font-family:var(--mono);color:var(--text2);}
+.iv.pos{color:var(--green);}
+.iv.neg{color:var(--red);}
+.iv.risk{color:var(--amber);}
+.cb{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
+.cb:hover{border-color:var(--green);}
+.cb.chk{background:var(--green);border-color:var(--green);}
+.cb.chk::after{content:'✓';font-size:10px;color:#0a0c14;font-weight:700;}
+.rs{background:none;border:1px solid var(--border);border-radius:6px;color:var(--text2);padding:3px 8px;font-size:11px;font-family:var(--font);cursor:pointer;outline:none;transition:border-color .15s;}
+.rs:focus{border-color:var(--blue);}
+/* PROGRESS */
+.pr{display:flex;align-items:center;gap:16px;}
+.rw{position:relative;width:64px;height:64px;flex-shrink:0;}
+.rw svg{transform:rotate(-90deg);}
+.rc{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#fff;}
+.ri h4{font-size:16px;font-weight:300;color:#fff;}
+.ri p{font-size:11px;color:var(--text3);}
+/* NOTES */
+.ng{display:grid;grid-template-columns:280px 1fr;gap:12px;min-height:calc(100vh - 120px);}
+.ns{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;}
+.nsh{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.nst{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;}
+.nnb{width:24px;height:24px;border-radius:6px;background:var(--blue);border:none;cursor:pointer;color:#0a0c14;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.nnb:hover{background:#93c5fd;transform:scale(1.05);}
+.nl{flex:1;overflow-y:auto;}
+.ni{padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;position:relative;}
+.ni:hover{background:var(--bg3);}
+.ni.active{background:var(--bg3);border-left:2px solid var(--blue);}
+.ni-t{font-size:12px;font-weight:500;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ni-p{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ni-d{font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);}
+.nd{position:absolute;right:10px;top:50%;transform:translateY(-50%);opacity:0;font-size:14px;color:var(--red);cursor:pointer;transition:opacity .15s;background:none;border:none;padding:2px 6px;}
+.ni:hover .nd{opacity:1;}
+.nw{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);display:flex;flex-direction:column;overflow:hidden;}
+.etb{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.eti{flex:1;background:none;border:none;outline:none;font-size:16px;font-weight:600;color:#fff;font-family:var(--font);min-width:200px;}
+.eti::placeholder{color:var(--text3);}
+.ecs{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text2);padding:4px 10px;font-size:11px;font-family:var(--font);cursor:pointer;outline:none;}
+.esb{padding:6px 14px;background:var(--blue);border:none;border-radius:6px;color:#0a0c14;font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all .15s;}
+.esb:hover{background:#93c5fd;}
+.ec{flex:1;padding:20px 24px;outline:none;font-size:14px;line-height:1.8;color:var(--text);overflow-y:auto;min-height:300px;}
+.ec:empty::before{content:attr(data-placeholder);color:var(--text3);}
+/* MODAL */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:500;display:flex;align-items:center;justify-content:center;animation:fin .15s ease;}
+.mb{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:28px 32px;width:520px;max-width:95vw;animation:fup .2s ease;}
+.mb h3{font-size:16px;font-weight:600;color:#fff;margin-bottom:6px;}
+.mb p{font-size:13px;color:var(--text2);margin-bottom:20px;}
+.mfs{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.mf input,.mf select,.mf textarea{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);padding:10px 14px;font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s;}
+.mf input:focus,.mf select:focus,.mf textarea:focus{border-color:var(--blue);}
+.mf textarea{min-height:80px;resize:vertical;}
+.mf label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;display:block;}
+.mac{display:flex;gap:8px;justify-content:flex-end;}
+.mc{padding:8px 18px;border-radius:8px;border:1px solid var(--border2);background:none;color:var(--text2);font-size:13px;font-family:var(--font);cursor:pointer;}
+.mco{padding:8px 18px;border-radius:8px;border:none;background:var(--blue);color:#0a0c14;font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px;}
+/* RESPONSIVE */
+@media(max-width:900px){.hkg{grid-template-columns:repeat(2,1fr);}.og{grid-template-columns:1fr 1fr;}.cr{grid-template-columns:1fr;}.ng{grid-template-columns:1fr;}.tnav{display:none;}}
+@media(max-width:600px){.og{grid-template-columns:1fr;}.hkg{grid-template-columns:1fr 1fr;}.page{padding:12px;}}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="lw">
+    <div class="l-badge"><span></span>Acesso Restrito</div>
+    <div class="l-h">Gestão Estratégica<br><strong>Resort Club Fazenda</strong></div>
+    <div class="l-sub">Painel confidencial de auditoria e plano de ação · Dez/24–Fev/26</div>
+    <div class="l-field"><input type="password" id="pwd" placeholder="Senha de acesso" onkeydown="if(event.key==='Enter')tryLogin()"></div>
+    <button class="l-btn" onclick="tryLogin()">Entrar no painel</button>
+    <div class="l-err" id="err"></div>
+  </div>
+</div>
+
+<div id="main">
+<div class="topbar">
+  <div class="tl">
+    <div class="t-logo">🏡</div>
+    <div><div class="t-name">Resort Club Fazenda</div><div class="t-per">Dez/2024 → Fev/2026 · 13 meses · Piraquara–PR</div></div>
+  </div>
+  <div class="tnav">
+    <button class="nb active" onclick="showPage('overview',this)">Visão Geral</button>
+    <button class="nb" onclick="showPage('offenses',this)">Ofensores</button>
+    <button class="nb" onclick="showPage('actions',this)">Plano de Ação</button>
+    <button class="nb" onclick="showPage('notes',this)">Registros</button>
+  </div>
+  <span class="sc" id="score-chip">⬤ 0% concluído</span>
+</div>
+
+<!-- OVERVIEW -->
+<div class="page active" id="page-overview">
+  <div class="hero">
+    <div class="h-tag">Auditoria Administrativa 2024–2026</div>
+    <div class="h-title">Identificamos <strong>R$ 130k+</strong><br>de economia anual potencial</div>
+    <div class="h-sub">18 prestações analisadas · 11 funcionários CLT · 262 lotes · Associação dos Moradores do Resort</div>
+    <div class="hkg">
+      <div class="hk red"><div class="hk-lbl">Dívida ativa (fev/26)</div><div class="hk-val">R$ 131k</div><div class="hk-sub">Nunca abaixo de R$ 114k</div></div>
+      <div class="hk amber"><div class="hk-lbl">Patrimônio sem seguro</div><div class="hk-val">R$ 0</div><div class="hk-sub">Risco existencial não mitigado</div></div>
+      <div class="hk amber"><div class="hk-lbl">Déficit oculto dos fundos</div><div class="hk-val">R$ 146k</div><div class="hk-sub">Manutenção + Segurança</div></div>
+      <div class="hk green"><div class="hk-lbl">Solar — payback</div><div class="hk-val">3,4 anos</div><div class="hk-sub">Economia: R$ 81,5k/ano</div></div>
+      <div class="hk blue"><div class="hk-lbl">Ações mapeadas</div><div class="hk-val" id="ov-a">22</div><div class="hk-sub" id="ov-d">0 concluídas</div></div>
+    </div>
+  </div>
+  <div class="cr">
+    <div class="cp"><div class="ct">💸 Principais despesas mensais (média)</div><div id="c-desp"></div></div>
+    <div class="cp"><div class="ct">🎯 Oportunidades de economia anuais</div><div id="c-sav"></div></div>
+  </div>
+  <div class="cr">
+    <div class="cp">
+      <div class="ct">📉 Dívida total em aberto (R$ mil)</div>
+      <svg viewBox="0 0 600 100" style="width:100%;height:100px" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff4d6d" stop-opacity=".3"/><stop offset="100%" stop-color="#ff4d6d" stop-opacity=".02"/></linearGradient></defs>
+        <line x1="0" y1="10" x2="600" y2="10" stroke="#1a1d2a" stroke-width="1"/>
+        <line x1="0" y1="40" x2="600" y2="40" stroke="#1a1d2a" stroke-width="1"/>
+        <line x1="0" y1="70" x2="600" y2="70" stroke="#1a1d2a" stroke-width="1"/>
+        <text x="2" y="9" font-size="8" fill="#4a5268" font-family="DM Sans">165k</text>
+        <text x="2" y="39" font-size="8" fill="#4a5268" font-family="DM Sans">140k</text>
+        <text x="2" y="69" font-size="8" fill="#4a5268" font-family="DM Sans">115k</text>
+        <polygon fill="url(#dg)" points="36,42 82,22 128,68 174,52 220,16 266,64 312,62 358,42 404,57 450,45 496,17 540,46 580,50 580,82 36,82"/>
+        <polyline fill="none" stroke="#ff4d6d" stroke-width="2.5" stroke-linejoin="round" points="36,42 82,22 128,68 174,52 220,16 266,64 312,62 358,42 404,57 450,45 496,17 540,46 580,50"/>
+        <circle cx="220" cy="16" r="4" fill="#ffb347"/><text x="214" y="12" font-size="8" fill="#ffb347" font-family="DM Sans">R$163k</text>
+        <circle cx="496" cy="17" r="4" fill="#ffb347"/><text x="488" y="12" font-size="8" fill="#ffb347" font-family="DM Sans">R$162k</text>
+        <text x="28" y="94" font-size="8" fill="#4a5268" font-family="DM Sans">Dez24</text><text x="76" y="94" font-size="8" fill="#4a5268" font-family="DM Sans">Jan25</text><text x="124" y="94" font-size="8" fill="#4a5268" font-family="DM Sans">Fev</text><text x="170" y="94" font-size="8" fill="#4a5268" font-family="DM Sans">Mar</text><text x="216" y="94" font-size="8" fill="#ffb347" font-family="DM Sans">Abr</text><text x="262" y="94" font-size="8" fill="#4a5268" font-family="DM Sans">Mai</text><text x="308" y="94" font-size="8" fill="#4a5268" font-family="DM Sans">Ago</text><text x="354" y="94" font-size="8" fill="#4a5268" font-family="DM Sans">Set</text><text x="400" y="94" font-size="8" fill="#4a5268" font-family="DM Sans">Out</text><text x="446" y="94" font-size="8" fill="#4a5268" font-family="DM Sans">Nov</text><text x="492" y="94" font-size="8" fill="#ffb347" font-family="DM Sans">Dez</text><text x="536" y="94" font-size="8" fill="#4a5268" font-family="DM Sans">Jan26</text><text x="574" y="94" font-size="8" fill="#4a5268" font-family="DM Sans">Fev</text>
+      </svg>
+    </div>
+    <div class="cp">
+      <div class="ct">⚡ Energia elétrica — custo mensal (R$)</div>
+      <svg viewBox="0 0 600 100" style="width:100%;height:100px" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="eg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffb347" stop-opacity=".35"/><stop offset="100%" stop-color="#ffb347" stop-opacity=".02"/></linearGradient>
+          <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4ade80" stop-opacity=".2"/><stop offset="100%" stop-color="#4ade80" stop-opacity=".02"/></linearGradient>
+        </defs>
+        <line x1="0" y1="10" x2="600" y2="10" stroke="#1a1d2a" stroke-width="1"/>
+        <line x1="0" y1="45" x2="600" y2="45" stroke="#1a1d2a" stroke-width="1"/>
+        <line x1="0" y1="80" x2="600" y2="80" stroke="#1a1d2a" stroke-width="1"/>
+        <text x="2" y="9" font-size="8" fill="#4a5268" font-family="DM Sans">11k</text>
+        <text x="2" y="44" font-size="8" fill="#4a5268" font-family="DM Sans">9k</text>
+        <text x="2" y="79" font-size="8" fill="#4a5268" font-family="DM Sans">7k</text>
+        <polygon fill="url(#eg)" points="36,30 82,23 128,25 174,13 220,22 266,20 312,28 358,38 404,36 450,30 496,30 540,27 580,23 580,82 36,82"/>
+        <polyline fill="none" stroke="#ffb347" stroke-width="2" points="36,30 82,23 128,25 174,13 220,22 266,20 312,28 358,38 404,36 450,30 496,30 540,27 580,23"/>
+        <polygon fill="url(#sg)" points="36,72 82,70 128,71 174,68 220,70 266,69 312,72 358,76 404,75 450,72 496,72 540,71 580,70 580,82 36,82"/>
+        <polyline fill="none" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="5,3" points="36,72 82,70 128,71 174,68 220,70 266,69 312,72 358,76 404,75 450,72 496,72 540,71 580,70"/>
+        <text x="456" y="65" font-size="8" fill="#4ade80" font-family="DM Sans">Com solar (75%↓)</text>
+        <circle cx="358" cy="38" r="3" fill="#ffb347"/>
+        <text x="350" y="33" font-size="8" fill="#ffb347" font-family="DM Sans">R$10k</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- OFFENSES -->
+<div class="page" id="page-offenses">
+  <div class="sh"><div class="st">Principais ofensores identificados</div><div style="font-size:11px;color:var(--text3)">Clique em qualquer card para expandir os detalhes</div></div>
+  <div class="og" id="og"></div>
+</div>
+
+<!-- ACTIONS -->
+<div class="page" id="page-actions">
+  <div class="atb">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <div class="pr">
+        <div class="rw">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="26" fill="none" stroke="#1a1d2a" stroke-width="5"/>
+            <circle cx="32" cy="32" r="26" fill="none" stroke="#4ade80" stroke-width="5" stroke-dasharray="163.4" id="pc" stroke-dashoffset="163.4" stroke-linecap="round" style="transition:stroke-dashoffset .6s ease"/>
+          </svg>
+          <div class="rc" id="pp">0%</div>
+        </div>
+        <div class="ri"><h4 id="pl">0 de 22 concluídas</h4><p>Plano de ação estruturado</p></div>
+      </div>
+      <div class="fbs">
+        <button class="fb active" onclick="fA('all',this)">Todas</button>
+        <button class="fb" onclick="fA('Imediato',this)">🔴 Imediato</button>
+        <button class="fb" onclick="fA('Médio',this)">🟡 Médio</button>
+        <button class="fb" onclick="fA('Melhoria',this)">🟢 Melhoria</button>
+        <button class="fb" onclick="fA('open',this)">Em aberto</button>
+      </div>
+    </div>
+    <button class="aab" onclick="openModal()">＋ Nova ação</button>
+  </div>
+  <table class="at">
+    <thead><tr>
+      <th style="width:36px"></th>
+      <th style="width:28px">#</th>
+      <th>Ação / Nota</th>
+      <th style="width:100px">Prioridade</th>
+      <th style="width:130px">Responsável</th>
+      <th style="width:115px">Status</th>
+      <th style="width:110px">Impacto/ano</th>
+    </tr></thead>
+    <tbody id="atb"></tbody>
+  </table>
+</div>
+
+<!-- NOTES -->
+<div class="page" id="page-notes">
+  <div class="ng">
+    <div class="ns">
+      <div class="nsh">
+        <span class="nst">Registros</span>
+        <button class="nnb" onclick="newNote()" title="Novo registro">+</button>
+      </div>
+      <div class="nl" id="nl"></div>
+    </div>
+    <div class="nw">
+      <div class="etb">
+        <input class="eti" id="nt" placeholder="Título do registro..." oninput="aS()">
+        <select class="ecs" id="nc" onchange="aS()">
+          <option>📋 Plano de Ação</option>
+          <option>⚠️ Alerta</option>
+          <option>💡 Oportunidade</option>
+          <option>📊 Análise</option>
+          <option>🤝 Reunião / Ata</option>
+          <option>📌 Geral</option>
+        </select>
+        <button class="esb" onclick="saveNote()">Salvar</button>
+      </div>
+      <div class="ec" id="nb" contenteditable="true" data-placeholder="Escreva aqui... Use este espaço para registrar decisões, planos de ação detalhados, atas resumidas, observações da síndica ou qualquer anotação relevante para a gestão do condomínio.&#10;&#10;💡 Dica: este campo suporta formatação básica de texto." oninput="aS()"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" style="display:none">
+  <div class="mo" onclick="if(event.target===this)closeModal()">
+    <div class="mb">
+      <h3>Nova ação</h3>
+      <p>Adicione uma ação personalizada ao plano de gestão estratégica.</p>
+      <div class="mfs">
+        <div class="mf"><label>Descrição da ação</label><input type="text" id="m-t" placeholder="Ex: Contratar seguro patrimonial"></div>
+        <div class="mf"><label>Nota / contexto</label><textarea id="m-n" placeholder="Detalhes, motivação, prazo estimado..."></textarea></div>
+        <div class="mf" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div><label>Prioridade</label><select id="m-p"><option>Imediato</option><option>Médio</option><option>Melhoria</option></select></div>
+          <div><label>Impacto estimado</label><input type="text" id="m-i" placeholder="Ex: R$ 5.000/ano"></div>
+        </div>
+      </div>
+      <div class="mac">
+        <button class="mc" onclick="closeModal()">Cancelar</button>
+        <button class="mco" onclick="addAction()">Adicionar ação</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// AUTH
+async function sha256(msg){const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(msg));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+async function tryLogin(){
+  const pwd=document.getElementById('pwd').value;
+  const err=document.getElementById('err');
+  if(!pwd){err.textContent='Digite a senha.';return;}
+  const h=await sha256(pwd);
+  if(h==='eb091fca376f33bc1260ba48b25f935f667a4beda5e1453c4a219d0692d0ec0f'){
+    document.getElementById('login').style.display='none';
+    document.getElementById('main').style.display='block';
+    sessionStorage.setItem('auth','ok');
+    init();
+  } else {err.textContent='Senha incorreta.';document.getElementById('pwd').value='';}
+}
+if(sessionStorage.getItem('auth')==='ok'){document.getElementById('login').style.display='none';document.getElementById('main').style.display='block';window.addEventListener('DOMContentLoaded',init);}
+
+// NAV
+function showPage(p,el){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  if(el)el.classList.add('active');
+}
+
+// DATA
+const OFFENSES=[
+  {id:'seg',sev:'crit',ico:'🔐',badge:'Risco Existencial',ttl:'Zero seguro patrimonial',val:'R$ 0',dsc:'Nenhum pagamento de seguro em 13 meses. 255.808m² de patrimônio, piscinas, salões e 11 funcionários completamente desprotegidos.',
+   det:['Responsabilidade civil por acidente com visitante: risco de indenização milionária','Incêndio ou dano estrutural não coberto pode superar o patrimônio líquido da Associação','Eventos nos salões com dezenas de pessoas sem qualquer cobertura de seguro','Custo de seguro multi-risco: R$ 400–800/mês — muito menor que qualquer sinistro'],
+   act:'Contratar seguro imediatamente — antes do próximo evento nos salões',at:'ar'},
+  {id:'inadimp',sev:'crit',ico:'⚠️',badge:'Crítico',ttl:'Inadimplência crônica — R$ 131k em aberto',val:'R$ 131k',dsc:'9 lotes presentes em todos os 13 meses. Dívida nunca abaixo de R$ 114k. Parcelamentos de R$ 4k a R$ 49k sem critério formal aprovado.',
+   det:['Lotes crônicos: 037, 094, 158, 170, 171, 175, 176, 189, 202 — sem quitação em 13 meses','Extrato de dívida por lote nunca publicado nas prestações de contas','Roçadas dos terrenos inadimplentes pagas pela coletividade: R$ 10.190 em 13 meses','Parcelamentos bilaterais sem tabela violam Art. 24 do Estatuto — risco jurídico'],
+   act:'Publicar extrato por lote + aprovar tabela de acordos no Conselho Deliberativo',at:'ar'},
+  {id:'segvig',sev:'crit',ico:'🛡️',badge:'Crítico',ttl:'Vigilância +85% sem justificativa formal',val:'+R$ 83k/ano',dsc:'Base saltou de R$ 10.680 para R$ 17.629 em abr/25 (+65%) com adição de zelador ao contrato. Segundo salto de +25% em jul/25.',
+   det:['Zelador Vieseg adicionado em abr/25: +R$ 5.131/mês fixo = +R$ 61.572/ano permanente','Fundo de Segurança arrecada ~R$ 10k/mês mas despesa chega a R$ 22,4k/mês','Déficit de ~R$ 12k/mês absorvido pelo rateio geral sem transparência específica','Coberturas de férias (R$ 4–11k/mês) são legítimas — o problema é o salto estrutural'],
+   act:'Apresentar contrato Vieseg ao Conselho + cotação de mercado atualizada',at:'ar'},
+  {id:'fundos',sev:'crit',ico:'📉',badge:'Crítico',ttl:'Fundos subdimensionados — déficit oculto',val:'R$ 146k',dsc:'Fundo Manutenção arrecadou R$ 171k mas gastou R$ 226k. Fundo Segurança arrecadou R$ 130k mas gastou R$ 221k em 13 meses.',
+   det:['Déficit Fundo Manutenção: R$ 55.305 — gasto 32% acima do arrecadado mensalmente','Déficit Fundo Segurança: R$ 91.000 — gasto 70% acima do que o fundo cobre','Os déficits são cobertos silenciosamente pelo rateio geral sem que associados percebam','Revisão das taxas dos fundos é necessária para refletir os custos reais da operação'],
+   act:'Apresentar análise de suficiência em assembleia e propor revisão das taxas',at:'ar'},
+  {id:'vivo',sev:'warn',ico:'📱',badge:'Atenção',ttl:'Vivo Móvel — 7 linhas com dados desnecessários',val:'R$ 5.916/ano',dsc:'~7 linhas SMART EMPRESAS com 2–12GB de dados. Wi-Fi já instalado em toda a área comum.',
+   det:['Fatura jan/24 confirma planos: 2GB, 6GB, 10GB e 12GB para colaboradores','Com Wi-Fi disponível nos salões, portaria e escritório, dados móveis são redundantes','Solução: chip de voz básica (~R$ 30/linha × 7 = R$ 210/mês vs R$ 600–703 atual)','Economia garantida: R$ 390–493/mês = R$ 5.916/ano — sem impacto operacional'],
+   act:'Cancelar pacotes de dados e migrar para planos de voz básica (Vivo ou outra operadora)',at:'aa'},
+  {id:'boleto',sev:'warn',ico:'💳',badge:'Atenção',ttl:'100% boleto — R$ 16.460 em tarifas',val:'R$ 10.416/ano',dsc:'~310 boletos/mês a R$ 4 cada. Nenhuma opção Pix disponível para os associados pagarem.',
+   det:['R$ 16.460 em tarifas bancárias de boleto nos 13 meses analisados','Pix é gratuito e já é usado internamente para pagar fornecedores da Associação','Migração de 70% dos pagantes para Pix = economia de R$ 868/mês = R$ 10.416/ano','Implementação via Syndikos/Superlogica — configuração de sistema, sem custo adicional'],
+   act:'Ativar cobrança via Pix na plataforma de gestão Syndikos/Superlogica',at:'aa'},
+  {id:'trator',sev:'warn',ico:'🚜',badge:'Atenção',ttl:'Trator — R$ 9.635 em 3 meses de reparo',val:'Obsolescência',dsc:'Jan/25: R$ 4.150 + Fev/25: R$ 4.300 manutenção + R$ 665 elétrica + R$ 520 bateria. Custo anual estimado R$ 32–38k.',
+   det:['Equipamento que consome R$ 9.635 em 3 meses tem vida útil comprometida','Combustível e lubrificantes (~R$ 1.834/mês médio) não estão incluídos nesse valor','Custo total anual estimado do trator: R$ 32–38k (manutenção + combustível)','Laudo técnico pode revelar se vale manter, recondicionado ou substituir por novo'],
+   act:'Solicitar laudo técnico e cotação de trator novo/recondicionado para decisão',at:'aa'},
+  {id:'solar',sev:'opp',ico:'☀️',badge:'Oportunidade',ttl:'Painel solar — payback de 3,4 anos',val:'+R$ 81,5k/ano',dsc:'R$ 117.903 gastos em energia em 13 meses. Sistema ~80kWp estimado em R$ 250–280k.',
+   det:['Média de R$ 9.070/mês em energia elétrica (3 medidores Copel Distribuição)','Sistema fotovoltaico cobre 75–80% do consumo: lazer, portaria e áreas comuns','Piraquara–PR tem 4,8h de sol pleno/dia — irradiância excelente no Estado','A partir do 5° ano: R$ 81,5k/ano líquido direto para o caixa da Associação'],
+   act:'Solicitar 3 orçamentos de integradores solares e apresentar viabilidade ao Conselho',at:'ag'},
+  {id:'trab',sev:'crit',ico:'⚖️',badge:'Risco Trabalhista',ttl:'Prestadores sem formalização — R$ 36k em risco',val:'Passivo trabalhista',dsc:'Naldemir Pinheiro (R$ 29.890) e Eduardo Gonçalves (R$ 6.324): pagamentos quinzenais regulares sem CLT ou NF.',
+   det:['Habitualidade + pessoalidade + dependência = elementos do vínculo empregatístico','Pagamentos "Pós Festa" de Naldemir em dinheiro físico — sem qualquer rastreabilidade','Eduardo Gonçalves: R$ 6.324 em 4 meses, sem CNPJ, categoria ou nota fiscal associada','Se houver reclamação trabalhista, a Associação perde — ausência de provas de autonomia'],
+   act:'Regularizar via CLT ou MEI com NF — eliminar todos os pagamentos em dinheiro físico',at:'ar'},
+  {id:'esport',sev:'crit',ico:'🎾',badge:'Crítico',ttl:'Manutenção Esportiva sem fornecedor',val:'R$ 9.429',dsc:'R$ 4.729 (jan/26) + R$ 4.700 (fev/26). Nenhum CNPJ, nome, NF ou descrição de serviço identificada.',
+   det:['Valores mensais regulares — padrão de prestador recorrente não formalizado','O que é "manutenção esportiva"? Quadras? Academia? Canchas? Sem qualquer descrição','Sem contrato: a Associação não tem garantias de serviço nem pode exigir NF retroativa','Risco de passivo trabalhista idêntico ao caso Naldemir Pinheiro se a relação continuar'],
+   act:'Identificar fornecedor, exigir NF retroativa e formalizar contrato de prestação',at:'ar'},
+  {id:'pisc',sev:'warn',ico:'🏊',badge:'Atenção',ttl:'Piscinas — R$ 39.933 sem contrato preventivo',val:'Redução 25%',dsc:'Variou de R$ 1.830 a R$ 7.709/mês. Pico em fev/25 indica manutenção corretiva de grande porte.',
+   det:['Média atual: R$ 3.072/mês em manutenção majoritariamente corretiva','Manutenção corretiva é sempre mais cara e imprevisível que preventiva','Contrato fixo mensal com empresa especializada: estimativa R$ 2.000–2.500/mês','Economia potencial: R$ 6.864–12.864/ano com maior previsibilidade orçamentária'],
+   act:'Cotar contrato preventivo mensal com ao menos 3 fornecedores especializados',at:'aa'},
+];
+
+const ACTIONS_DEF=[
+  {id:1,title:'Contratar seguro patrimonial e de responsabilidade civil',note:'Antes do próximo evento nos salões. Solicitar cotações para seguro multi-risco condominial — cobertura de incêndio, RC, equipamentos e eventos.',pri:'Imediato',resp:'Síndica',status:'Aberto',impact:'R$ 0 custo vs risco ilimitado',it:'risk'},
+  {id:2,title:'Cancelar pacotes de dados Vivo → chip de voz básica',note:'~7 linhas SMART EMPRESAS. Solicitar à operadora downgrade para plano voz simples (~R$30/linha). Sem impacto operacional.',pri:'Imediato',resp:'Síndica',status:'Aberto',impact:'+R$ 5.916/ano',it:'pos'},
+  {id:3,title:'Ativar cobrança via Pix na plataforma Syndikos',note:'Reduz tarifas de boleto de R$1.264/mês. Configuração no painel da administradora — solicitar ativação imediata.',pri:'Imediato',resp:'Síndica',status:'Aberto',impact:'+R$ 10.416/ano',it:'pos'},
+  {id:4,title:'Política zero dinheiro físico — tudo Pix/TED com NF',note:'Eliminar todos os pagamentos em espécie. Instrução formal à administradora e comunicado interno.',pri:'Imediato',resp:'Síndica',status:'Aberto',impact:'Governança',it:'risk'},
+  {id:5,title:'Publicar extrato de inadimplência por lote em assembleia',note:'Solicitar à Syndikos relatório: valor acumulado por lote, dias em atraso, status judicial.',pri:'Imediato',resp:'Síndica',status:'Aberto',impact:'Transparência',it:'risk'},
+  {id:6,title:'Regularizar Naldemir Pinheiro — CLT ou MEI com NF',note:'Pagamentos quinzenais há 13+ meses configuram vínculo empregatístico. Alto risco trabalhista.',pri:'Imediato',resp:'Síndica',status:'Aberto',impact:'Passivo trabalhista',it:'risk'},
+  {id:7,title:'Identificar e formalizar fornecedor Manutenção Esportiva',note:'R$9.429 em jan-fev/26 sem CNPJ ou NF. Exigir contrato e documentação fiscal.',pri:'Imediato',resp:'Síndica',status:'Aberto',impact:'R$ 9.429 sem NF',it:'risk'},
+  {id:8,title:'Apresentar contrato Vieseg ao Conselho + cotação concorrente',note:'Aumento de 85% em 16 meses. Justificar aditivo abr/25 (+R$5.131/mês) e apresentar cotação de mercado.',pri:'Imediato',resp:'Síndica',status:'Aberto',impact:'+R$ 83k/ano estrutural',it:'neg'},
+  {id:9,title:'Regularizar Eduardo Gonçalves — NF e categoria de serviço',note:'R$6.324 em 4 meses sem CNPJ ou descrição. Exigir NF retroativa ou encerrar relação.',pri:'Imediato',resp:'Síndica',status:'Aberto',impact:'R$ 6.324 sem NF',it:'risk'},
+  {id:10,title:'Lançar custo de roçadas no saldo devedor dos inadimplentes',note:'R$10.190 em 13 meses pagos pela coletividade para lotes inadimplentes. Instrução à Syndikos.',pri:'Imediato',resp:'Síndica',status:'Aberto',impact:'+R$ 10.190 recuperados',it:'pos'},
+  {id:11,title:'Formalizar tabela dos salões em ata do Conselho Deliberativo',note:'Estatuto Art. 24 item 2 — competência do Conselho, não da Diretoria. Ratificar em reunião.',pri:'Imediato',resp:'Conselho',status:'Aberto',impact:'Jurídico',it:'risk'},
+  {id:12,title:'Apresentar análise de déficit dos fundos em assembleia',note:'Fundo Manutenção: -R$55k. Fundo Segurança: -R$91k. Propor revisão das taxas para equilíbrio.',pri:'Médio',resp:'Síndica',status:'Aberto',impact:'R$ 146k déficit',it:'neg'},
+  {id:13,title:'Solicitar estimativa total do processo de legalização',note:'R$209.843 acumulados no fundo sem meta definida. Advogado deve informar valor total e prazo.',pri:'Médio',resp:'Síndica',status:'Aberto',impact:'R$ 209k sem meta',it:'risk'},
+  {id:14,title:'Contratar manutenção preventiva mensal das piscinas',note:'Atual: R$3.072/mês corretiva. Contrato preventivo fixo: ~R$2.000–2.500/mês. Cotar 3 fornecedores.',pri:'Médio',resp:'Síndica',status:'Aberto',impact:'+R$ 6.864/ano',it:'pos'},
+  {id:15,title:'Solicitar 3 orçamentos para painel solar fotovoltaico',note:'Energia: R$108,7k/ano. Sistema ~80kWp estimado R$250–280k. Payback 3,4 anos. Art.218 permite Conselho contratar.',pri:'Médio',resp:'Conselho',status:'Aberto',impact:'+R$ 81.500/ano',it:'pos'},
+  {id:16,title:'Cotação da Syndikos com 2 administradoras concorrentes',note:'R$60.301 pagos à Syndikos em 13 meses (honorários + sistema + correio). Comparar escopo e preço.',pri:'Médio',resp:'Conselho',status:'Aberto',impact:'R$ 60k/ano',it:'risk'},
+  {id:17,title:'Laudo técnico do trator + cotação de reposição',note:'R$9.635 em 3 meses de manutenção + ~R$1.834/mês em combustível. Avaliar viabilidade de troca.',pri:'Médio',resp:'Síndica',status:'Aberto',impact:'R$ 32–38k/ano',it:'risk'},
+  {id:18,title:'Verificar obrigatoriedade da contribuição sindical',note:'R$1.200 pago em ago/25. Desde 2017 é facultativa para empregadores. Verificar se é erro ou voluntária.',pri:'Médio',resp:'Síndica',status:'Aberto',impact:'+R$ 1.200/ano',it:'pos'},
+  {id:19,title:'Definir política para animais comunitários em assembleia',note:'R$1.243 em castrações/veterinário. Formalizar: critério, número de animais, orçamento anual máximo.',pri:'Médio',resp:'Conselho',status:'Aberto',impact:'R$ 1.243',it:'risk'},
+  {id:20,title:'Aumentar periodicidade de análise de água do poço artesiano',note:'1 análise em 13 meses (set/25: R$1.120). Legislação sanitária do PR exige periodicidade maior.',pri:'Médio',resp:'Síndica',status:'Aberto',impact:'Saúde pública',it:'risk'},
+  {id:21,title:'Incluir log de locações nas prestações mensais',note:'Data, lote locatário, nº de locações por salão. Permite verificar adimplência e medir ocupação.',pri:'Melhoria',resp:'Síndica',status:'Aberto',impact:'Visibilidade',it:'risk'},
+  {id:22,title:'Adquirir projetor próprio para os salões',note:'Locação atual: ~R$300/trimestre. Compra: R$1.500–2.000. Payback < 2 anos. Valoriza os salões.',pri:'Melhoria',resp:'Síndica',status:'Aberto',impact:'+R$ 1.200/ano',it:'pos'},
+];
+
+let actions=[],notes=[],aN=null,aF='all',aSt=null;
+
+function init(){
+  const sv=localStorage.getItem('ra');
+  actions=sv?JSON.parse(sv):JSON.parse(JSON.stringify(ACTIONS_DEF));
+  const sn=localStorage.getItem('rn');
+  notes=sn?JSON.parse(sn):[];
+  renderOffenses();renderCharts();renderActions();renderNotes();updateProgress();
+}
+
+// OFFENSES
+function renderOffenses(){
+  document.getElementById('og').innerHTML=OFFENSES.map(o=>`
+    <div class="oc ${o.sev}" id="card-${o.id}" onclick="tCard('${o.id}')">
+      <div class="oc-hd"><span style="font-size:20px">${o.ico}</span><span class="ob ${o.sev==='crit'?'bc':o.sev==='warn'?'bw':'bo'}">${o.badge}</span></div>
+      <div class="oc-ttl">${o.ttl}</div>
+      <div class="oc-val">${o.val}</div>
+      <div class="oc-dsc">${o.dsc}</div>
+      <div class="oc-exp">
+        <div class="od">
+          ${o.det.map(d=>`<div class="fact"><div class="fd"></div><div>${d}</div></div>`).join('')}
+          <div class="oa ${o.at}"><span>→</span><strong>Ação:</strong>&nbsp;${o.act}</div>
+        </div>
+      </div>
+      <div class="eh" id="eh-${o.id}">↓ expandir</div>
+    </div>`).join('');
+}
+function tCard(id){
+  const c=document.getElementById('card-'+id);
+  const h=document.getElementById('eh-'+id);
+  const e=c.classList.toggle('exp');
+  h.textContent=e?'↑ recolher':'↓ expandir';
+}
+
+// CHARTS
+function renderCharts(){
+  const d=[
+    {l:'Pessoal (CLT)',v:73112,c:'#ff4d6d'},{l:'Previdência Social',v:15772,c:'#ff8e53'},
+    {l:'Vigilância Vieseg',v:17002,c:'#ffb347'},{l:'Energia Elétrica',v:9071,c:'#ffd166'},
+    {l:'Adiantamentos',v:10103,c:'#06d6a0'},{l:'Fundo Manutenção',v:13144,c:'#4ade80'},
+    {l:'VT/Vale Refeição',v:8650,c:'#60a5fa'},{l:'Hon. Contabilidade',v:3846,c:'#818cf8'},
+    {l:'Advocacia',v:2555,c:'#c084fc'},{l:'Telefonia (3)',v:1043,c:'#22d3ee'},
+  ];
+  const mx=Math.max(...d.map(x=>x.v));
+  document.getElementById('c-desp').innerHTML=d.map(x=>`<div class="br"><div class="bl" title="${x.l}">${x.l}</div><div class="bt"><div class="bf" style="width:${(x.v/mx*100).toFixed(1)}%;background:${x.c}"></div></div><div class="bv">R$${(x.v/1000).toFixed(1)}k</div></div>`).join('');
+  const s=[
+    {l:'Painel Solar',v:81500,c:'#4ade80'},{l:'Boleto→Pix',v:10416,c:'#22d3ee'},
+    {l:'Piscinas preventivo',v:8640,c:'#60a5fa'},{l:'Vivo Móvel',v:5916,c:'#818cf8'},
+    {l:'Roçadas inadimp.',v:10190,c:'#c084fc'},{l:'Limpeza pós-festa',v:3000,c:'#f0abfc'},
+    {l:'Projetor próprio',v:1200,c:'#fbbf24'},{l:'Contrib. Sindical',v:1200,c:'#fb923c'},
+  ];
+  const mx2=Math.max(...s.map(x=>x.v));
+  document.getElementById('c-sav').innerHTML=s.map(x=>`<div class="br"><div class="bl" title="${x.l}">${x.l}</div><div class="bt"><div class="bf" style="width:${(x.v/mx2*100).toFixed(1)}%;background:${x.c}"></div></div><div class="bv" style="color:${x.c}">+R$${(x.v/1000).toFixed(1)}k</div></div>`).join('');
+}
+
+// ACTIONS
+const STATS=['Aberto','Em andamento','Concluído'];
+const SC={Aberto:'sa','Em andamento':'san',Concluído:'sc2'};
+const PC={Imediato:'pi','Médio':'pm',Melhoria:'pl'};
+const RESP=['Síndica','Conselho','Syndikos','Advogado','Externo'];
+
+function renderActions(f){
+  f=f||aF;
+  let rows=actions;
+  if(f==='open')rows=actions.filter(a=>a.status!=='Concluído');
+  else if(f!=='all')rows=actions.filter(a=>a.pri===f);
+  document.getElementById('atb').innerHTML=rows.map(a=>`
+    <tr class="ar2${a.status==='Concluído'?' done':''}" id="row-${a.id}">
+      <td><div class="cb${a.status==='Concluído'?' chk':''}" onclick="tDone(${a.id})"></div></td>
+      <td class="at-num">${a.id}</td>
+      <td class="at-tc">
+        <div class="at-t" contenteditable="true" onblur="sF(${a.id},'title',this.textContent)">${a.title}</div>
+        <div class="at-n" contenteditable="true" onblur="sF(${a.id},'note',this.textContent)">${a.note||''}</div>
+      </td>
+      <td><span class="pri ${PC[a.pri]||'pm'}" onclick="cP(${a.id})" title="Clique para alterar">${a.pri}</span></td>
+      <td><select class="rs" onchange="sF(${a.id},'resp',this.value)">${RESP.map(r=>`<option${r===a.resp?' selected':''}>${r}</option>`).join('')}</select></td>
+      <td><span class="sp ${SC[a.status]||'sa'}" onclick="cS(${a.id})" title="Clique para alterar">${a.status}</span></td>
+      <td><span class="iv ${a.it==='pos'?'pos':a.it==='neg'?'neg':a.it==='risk'?'risk':''}">${a.impact}</span></td>
+    </tr>`).join('');
+  updateProgress();
+}
+
+function tDone(id){const a=actions.find(x=>x.id===id);if(!a)return;a.status=a.status==='Concluído'?'Aberto':'Concluído';sA();renderActions();}
+function cS(id){const a=actions.find(x=>x.id===id);if(!a)return;const i=STATS.indexOf(a.status);a.status=STATS[(i+1)%STATS.length];sA();renderActions();}
+const PRIS=['Imediato','Médio','Melhoria'];
+function cP(id){const a=actions.find(x=>x.id===id);if(!a)return;const i=PRIS.indexOf(a.pri);a.pri=PRIS[(i+1)%PRIS.length];sA();renderActions();}
+function sF(id,f,v){const a=actions.find(x=>x.id===id);if(a){a[f]=v.trim();sA();updateProgress();}}
+function sA(){localStorage.setItem('ra',JSON.stringify(actions));}
+function fA(f,el){aF=f;document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderActions(f);}
+
+function updateProgress(){
+  const t=actions.length,d=actions.filter(a=>a.status==='Concluído').length;
+  const pct=t?Math.round(d/t*100):0;
+  const off=163.4-(163.4*pct/100);
+  const pc=document.getElementById('pc');if(pc)pc.style.strokeDashoffset=off;
+  const pp=document.getElementById('pp');if(pp)pp.textContent=pct+'%';
+  const pl=document.getElementById('pl');if(pl)pl.textContent=`${d} de ${t} concluídas`;
+  const sc=document.getElementById('score-chip');if(sc)sc.textContent=`⬤ ${pct}% concluído`;
+  const od=document.getElementById('ov-d');if(od)od.textContent=`${d} de ${t} concluídas`;
+  const oa=document.getElementById('ov-a');if(oa)oa.textContent=t;
+}
+
+// MODAL
+function openModal(){document.getElementById('modal').style.display='block';setTimeout(()=>document.getElementById('m-t').focus(),100);}
+function closeModal(){document.getElementById('modal').style.display='none';}
+function addAction(){
+  const t=document.getElementById('m-t').value.trim();if(!t)return;
+  const nid=Math.max(...actions.map(a=>a.id))+1;
+  actions.push({id:nid,title:t,note:document.getElementById('m-n').value.trim(),pri:document.getElementById('m-p').value,resp:'Síndica',status:'Aberto',impact:document.getElementById('m-i').value.trim()||'—',it:'risk'});
+  sA();renderActions();closeModal();
+  document.getElementById('m-t').value='';document.getElementById('m-n').value='';document.getElementById('m-i').value='';
+  toast('Ação adicionada ✓');
+}
+
+// NOTES
+function renderNotes(){
+  const nl=document.getElementById('nl');
+  if(!notes.length){nl.innerHTML='<div style="padding:20px 16px;font-size:12px;color:var(--text3);text-align:center">Nenhum registro ainda.<br>Clique em <strong>+</strong> para criar.</div>';return;}
+  nl.innerHTML=notes.map(n=>`
+    <div class="ni${aN===n.id?' active':''}" onclick="openNote(${n.id})">
+      <div class="ni-t">${n.title||'Sem título'}</div>
+      <div class="ni-p">${(n.cat||'')} ${(n.body||'').replace(/<[^>]+>/g,'').substring(0,40)}</div>
+      <div class="ni-d">${n.date||''}</div>
+      <button class="nd" onclick="event.stopPropagation();delNote(${n.id})" title="Excluir">✕</button>
+    </div>`).join('');
+}
+function newNote(){
+  const id=Date.now();
+  notes.unshift({id,title:'',cat:'📋 Plano de Ação',body:'',date:new Date().toLocaleDateString('pt-BR')});
+  aN=id;sN();renderNotes();
+  document.getElementById('nt').value='';
+  document.getElementById('nc').value='📋 Plano de Ação';
+  document.getElementById('nb').innerHTML='';
+  document.getElementById('nt').focus();
+}
+function openNote(id){
+  aN=id;const n=notes.find(x=>x.id===id);if(!n)return;
+  document.getElementById('nt').value=n.title||'';
+  document.getElementById('nc').value=n.cat||'📋 Plano de Ação';
+  document.getElementById('nb').innerHTML=n.body||'';
+  renderNotes();
+}
+function saveNote(){
+  if(!aN)return;const n=notes.find(x=>x.id===aN);if(!n)return;
+  n.title=document.getElementById('nt').value;
+  n.cat=document.getElementById('nc').value;
+  n.body=document.getElementById('nb').innerHTML;
+  n.date=new Date().toLocaleString('pt-BR');
+  sN();renderNotes();toast('Salvo ✓');
+}
+function aS(){clearTimeout(aSt);aSt=setTimeout(saveNote,1800);}
+function delNote(id){if(!confirm('Excluir este registro?'))return;notes=notes.filter(n=>n.id!==id);if(aN===id){aN=null;document.getElementById('nt').value='';document.getElementById('nb').innerHTML='';}sN();renderNotes();}
+function sN(){localStorage.setItem('rn',JSON.stringify(notes));}
+
+// TOAST
+function toast(msg){let t=document.getElementById('tst');if(!t){t=document.createElement('div');t.id='tst';t.style.cssText='position:fixed;bottom:24px;right:24px;background:#1a1d2a;border:1px solid rgba(74,222,128,.3);color:#4ade80;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:500;z-index:9999;transition:opacity .3s;pointer-events:none;';document.body.appendChild(t);}t.textContent=msg;t.style.opacity='1';clearTimeout(t._t);t._t=setTimeout(()=>t.style.opacity='0',2000);}
+</script>
+</body>
+</html>
